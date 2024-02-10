@@ -58,7 +58,7 @@
 在build.gradle中引入Java SDK。
 
 ```
-compile ('org.fisco-bcos.java-sdk:fisco-bcos-java-sdk:2.8.0')
+compile ('org.fisco-bcos.java-sdk:fisco-bcos-java-sdk:2.9.1')
 ```
 
 如果您使用maven 通过以下方法引入Java SDK
@@ -67,14 +67,14 @@ compile ('org.fisco-bcos.java-sdk:fisco-bcos-java-sdk:2.8.0')
 <dependency>
     <groupId>org.fisco-bcos.java-sdk</groupId>
     <artifactId>fisco-bcos-java-sdk</artifactId>
-    <version>2.8.0</version>
+    <version>2.9.1</version>
 </dependency>
 ```
 
 
 ```eval_rst
 .. note::
-    - 由于sol转java代码的变更，若使用最新控制台生成java代码，请升级Java SDK到最新的2.8.0版本
+    - 由于sol转java代码的变更，若使用最新控制台生成java代码，请升级Java SDK至 `2.8.0+` 版本
 ```
 
 
@@ -108,10 +108,10 @@ mkdir -p conf && cp -r ~/fisco/nodes/127.0.0.1/sdk/* conf
 ```bash
 $ mkdir -p ~/fisco && cd ~/fisco
 # 获取控制台
-$ curl -#LO https://github.com/FISCO-BCOS/console/releases/download/v2.8.0/download_console.sh
+$ curl -#LO https://github.com/FISCO-BCOS/console/releases/download/v2.9.2/download_console.sh
 
 # 若因为网络问题导致长时间无法执行以上命令，请尝试以下命令：
-$ https://osp-1257653870.cos.ap-guangzhou.myqcloud.com/FISCO-BCOS/console/releases/v2.8.0/download_console.sh
+$ https://osp-1257653870.cos.ap-guangzhou.myqcloud.com/FISCO-BCOS/console/releases/v2.9.2/download_console.sh
 
 $ bash download_console.sh
 $ cd ~/fisco/console

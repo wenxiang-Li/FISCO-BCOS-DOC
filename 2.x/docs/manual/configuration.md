@@ -81,6 +81,7 @@ P2P配置示例如下：
 [p2p]
     listen_ip=0.0.0.0
     listen_port=30300
+
     node.0=127.0.0.1:30300
     node.1=127.0.0.1:30304
     node.2=127.0.0.1:30308
@@ -223,7 +224,7 @@ FISCO BCOS 2.0+所有版本向前兼容，可通过`config.ini`中的`[compatibi
 
 ```eval_rst
 .. important::
-    - 可通过 `./fisco-bcos --version | grep "Version" ` 命令查看FISCO BCOS的当前支持的最高版本
+    - 可通过 ``./fisco-bcos --version | egrep "Version"`` 命令查看FISCO BCOS的当前支持的最高版本
     - build_chain.sh生成的区块链节点配置中，supported_version配置为FISCO BCOS当前的最高版本
     - 旧节点升级为新节点时，直接将旧的FISCO BCOS二进制替换为最新FISCO BCOS二进制即可，千万不可修改supported_version
 ```
@@ -515,6 +516,18 @@ FISCO BCOS将交易池容量配置开放给用户，用户可根据自己的业�
     notify_worker_num=2
 ```
 
+#### 交易池交易超时时间配置
+
+为防止系统异常时交易在交易池中pending太久，FISCO BCOS 2.9.0引入了交易过期时间配置`txs_expiration_time`，当交易在交易池中pending的时间超过`txs_expiration_time`，交易池会主动清理该交易。
+
+- `[tx_pool].txs_expiration_time`: 交易过期时间，默认为10分钟，要求该值不小于共识超时时间
+
+交易超时时间配置示例如下：
+
+```ini
+    ; transaction expiration time, in seconds, default is 10 minute
+    txs_expiration_time=600
+```
 ### PBFT共识配置
 
 为提升PBFT算法的性能、可用性、网络效率，FISCO BCOS针对区块打包算法和网络做了一系列优化，包括PBFT区块打包动态调整策略、PBFT消息转发优化、PBFT Prepare包结构优化等。
@@ -675,7 +688,7 @@ max_request_missedTxs_waitTime=100
 
 为了降低SDK直连节点的峰值出带宽，提升区块链系统可扩展性，FISCO BCOS v2.2.0引入了交易树状广播优化策略，详细设计请参考[这里](../design/sync/sync_trans_optimize.md)。可通过`group.group_id.ini`的`[sync].send_txs_by_tree`开启或关闭交易树状广播策略，详细配置如下：
 
-- `[sync].sync_block_by_tree`：设置为`true`，打开交易树状广播策略；设置为`false`，关闭交易树状广播优化策略
+- `[sync].sync_block_by_tree`：设置为`true`，打开交易树状广播优化策略；设置为`false`，关闭交易树状广播优化策略
 
 关闭交易树状广播策略的配置如下：
 

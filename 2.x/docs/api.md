@@ -150,7 +150,7 @@ FISCO BCOS RPC接口错误码及其对应的含义如下：
 | -52011  | account frozen                    |          |
 | -52012  | current value is expected value              |          |
 
-### 动态群组管理 API 状态码
+### 动态群组管理API状态码
 
 | 状态码 | 消息内容                     | 释义                                        |
 | :-- | :--------------------------- | :------------------------------------------ |
@@ -1076,6 +1076,98 @@ curl -X POST --data '{"jsonrpc":"2.0","method":"getSystemConfigByKey","params":[
   "result": "1000"
 }
 ```
+## addPeers
+新增`P2P`连接配置，增加节点`config.ini:[p2p]`的连接配置
+
+```shell
+// config.ini
+[p2p]
+    ; nodes to connect
+    node.0=127.0.0.1:30300
+    node.1=127.0.0.1:30301
+    node.2=127.0.0.1:30302
+    node.3=127.0.0.1:30303
+```
+
+### 参数
+- `hostPorts`: `array` - `P2P`连接的ip和端口，格式:`ip:port`，支持IPv4和IPv6
+
+### 返回值
+- `object`: 接口调用结果，其字段如下：
+  - `code`: - 接口调用状态码，状态码的释义请参见[动态群组管理API状态码](./api.html#api)
+  - `message`: - 接口消息
+
+- 示例
+```
+// Request
+curl -X POST --data '{"jsonrpc":"2.0","method":"addPeers","params":[["127.0.0.1:30304","127.0.0.1:30305"]],"id":1}' http://127.0.0.1:8545 |jq
+
+// Result
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": {
+    "code": "0x0",
+    "message": " add peers successfully"
+  }
+}
+```
+## erasePeers
+删除`P2P`连接配置，删除节点`config.ini:[p2p]`的连接配置
+### 参数
+- `hostPorts`: `array` - `P2P`连接的ip和端口，格式:`ip:port`，支持IPv4和IPv6
+
+### 返回值
+- `object`: 接口调用结果，其字段如下：
+  - `code`: - 接口调用状态码，状态码的释义请参见[动态群组管理API状态码](./api.html#api)
+  - `message`: - 接口消息
+- 示例
+```
+// Request
+curl -X POST --data '{"jsonrpc":"2.0","method":"erasePeers","params":[["127.0.0.1:30300","127.0.0.1:30301"]],"id":1}' http://127.0.0.1:8545 |jq
+
+// Result
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": {
+    "code": "0x0",
+    "message": " erase peers successfully"
+  }
+}
+```
+## queryPeers
+查询`P2P`连接配置，查询节点`config.ini:[p2p]`的连接配置列表
+
+```shell
+// config.ini
+[p2p]
+    ; nodes to connect
+    node.0=127.0.0.1:30300
+    node.1=127.0.0.1:30301
+    node.2=127.0.0.1:30302
+    node.3=127.0.0.1:30303
+```
+### 参数
+无
+### 返回值
+- `array` - 配置的p2p节点IP和端口
+- 示例
+```
+// Request
+curl -X POST --data '{"jsonrpc":"2.0","method":"queryPeers","params":[],"id":1}' http://127.0.0.1:8545 |jq
+// Result
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": [
+    "127.0.0.1:30300",
+    "127.0.0.1:30301",
+    "127.0.0.1:30302",
+    "127.0.0.1:30303"
+  ]
+}
+```
 ## call
 执行一个可以立即获得结果的请求，无需区块链共识
 ### 参数
@@ -1345,7 +1437,7 @@ curl -X POST --data '{"jsonrpc":"2.0","method":"getTransactionReceiptByHashWithP
     - `enable_free_storage`: `bool` - 可选，是否启用"free storage"模式，启用后节点将减少STORAGE相关指令的gas耗费
 ### 返回值
 - `object`: - 接口调用结果，其字段如下：
-    - `code`: - 接口调用状态码，状态码的释义请参见[动态群组管理 API 状态码](#动态群组管理\ API\ 状态码)
+    - `code`: - 接口调用状态码，状态码的释义请参见[动态群组管理API状态码](./api.html#api)
     - `message`: - 接口消息
 
 - 示例
@@ -1371,7 +1463,7 @@ curl -X POST --data '{"jsonrpc":"2.0","method":"generateGroup","params":[2, {"ti
 - `groupID`: `unsigned int` - 群组ID
 ### 返回值
 - `object`: 接口调用结果，其字段如下：
-    - `code`: - 接口调用状态码，状态码的释义请参见[动态群组管理 API 状态码](#动态群组管理\ API\ 状态码)
+    - `code`: - 接口调用状态码，状态码的释义请参见[动态群组管理API状态码](./api.html#动态群组管理API状态码)
     - `message`: - 接口消息
 - 示例
 ```
@@ -1395,7 +1487,7 @@ curl -X POST --data '{"jsonrpc":"2.0","method":"startGroup","params":[2],"id":1}
 - `groupID`: `unsigned int` - 群组ID
 ### 返回值
 - `object`: 接口调用结果，其字段如下：
-    - `code`: - 接口调用状态码，状态码的释义请参见[动态群组管理 API 状态码](#动态群组管理\ API\ 状态码)
+    - `code`: - 接口调用状态码，状态码的释义请参见[动态群组管理API状态码](./api.html#api)
     - `message`: - 接口消息
 - 示例
 ```
@@ -1420,7 +1512,7 @@ curl -X POST --data '{"jsonrpc":"2.0","method":"stopGroup","params":[2],"id":1}'
 - `groupID`: `unsigned int` - 群组ID
 ### 返回值
 - `object`: 接口调用结果，其字段如下：
-    - `code`: - 接口调用状态码，状态码的释义请参见[动态群组管理 API 状态码](#动态群组管理\ API\ 状态码)
+    - `code`: - 接口调用状态码，状态码的释义请参见[动态群组管理API状态码](./api.html#api)
     - `message`: - 接口消息
 - 示例
 ```
@@ -1445,7 +1537,7 @@ curl -X POST --data '{"jsonrpc":"2.0","method":"removeGroup","params":[2],"id":1
 - `groupID`: `unsigned int` - 群组ID
 ### 返回值
 - `object`: 接口调用结果，其字段如下：
-    - `code`: - 接口调用状态码，状态码的释义请参见[动态群组管理 API 状态码](#动态群组管理\ API\ 状态码)
+    - `code`: - 接口调用状态码，状态码的释义请参见[动态群组管理API状态码](./api.html#api)
     - `message`: - 接口消息
 - 示例
 ```
@@ -1470,7 +1562,7 @@ curl -Ss -X POST --data '{"jsonrpc":"2.0","method":"recoverGroup","params":[2],"
 - `groupID`: `unsigned int` - 群组ID
 ### 返回值
 - `object`: 接口调用结果，其字段如下：
-    - `code`: - 接口调用状态码，状态码的释义请参见[动态群组管理 API 状态码](#动态群组管理\ API\ 状态码)
+    - `code`: - 接口调用状态码，状态码的释义请参见[动态群组管理API状态码](./api.html#api)
     - `message`: - 接口消息
     - `status`: - 群组状态标识，为下列值之一：
         - `INEXISTENT`: 群组不存在

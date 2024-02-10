@@ -30,7 +30,7 @@
 ```bash
 cd ~ && mkdir -p fisco && cd fisco
 # 获取控制台
-curl -#LO https://github.com/FISCO-BCOS/console/releases/download/v2.8.0/download_console.sh && bash download_console.sh
+curl -#LO https://github.com/FISCO-BCOS/console/releases/download/v2.9.2/download_console.sh && bash download_console.sh
 ```
 
 ```eval_rst
@@ -63,15 +63,15 @@ curl -#LO https://github.com/FISCO-BCOS/console/releases/download/v2.8.0/downloa
 **注意：默认下载的控制台内置`0.4.25`版本的`solidity`编译器，用户需要编译`0.5`或者`0.6`版本的合约时，可以通过下列命令获取内置对应编译器版本的控制台**	
 ```bash	
 # 0.5	
-curl -#LO https://github.com/FISCO-BCOS/console/releases/download/v2.8.0/download_console.sh && bash download_console.sh -v 0.5	
+curl -#LO https://github.com/FISCO-BCOS/console/releases/download/v2.9.2/download_console.sh && bash download_console.sh -v 0.5	
 # 0.6	
-curl -#LO https://github.com/FISCO-BCOS/console/releases/download/v2.8.0/download_console.sh && bash download_console.sh -v 0.6	
+curl -#LO https://github.com/FISCO-BCOS/console/releases/download/v2.9.2/download_console.sh && bash download_console.sh -v 0.6	
 ```
 
 ```eval_rst
 .. note::
-    - 如果因为网络问题导致长时间无法下载，0.5版本请尝试命令： `https://osp-1257653870.cos.ap-guangzhou.myqcloud.com/FISCO-BCOS/console/releases/v2.8.0/download_console.sh && bash download_console.sh -v 0.5` 
-    0.6版本请尝试命令： `https://osp-1257653870.cos.ap-guangzhou.myqcloud.com/FISCO-BCOS/console/releases/v2.8.0/download_console.sh && bash download_console.sh -v 0.6`
+    - 如果因为网络问题导致长时间无法下载，0.5版本请尝试命令： `https://osp-1257653870.cos.ap-guangzhou.myqcloud.com/FISCO-BCOS/console/releases/v2.9.2/download_console.sh && bash download_console.sh -v 0.5` 
+    0.6版本请尝试命令： `https://osp-1257653870.cos.ap-guangzhou.myqcloud.com/FISCO-BCOS/console/releases/v2.9.2/download_console.sh && bash download_console.sh -v 0.6`
 
 ```
 
@@ -2307,3 +2307,59 @@ TransactionReceiptsInfo{
     ]
 }
 ```
+
+## 附录：合约参数输入规则
+
+控制台在部署、调用合约时，涉及参数输入：
+
+- 部署合约: 合约构造函数包含参数
+  - [deploy](./console.html#deploy)
+  - [deployCNS](./console.html#deploybycns)
+- 调用合约
+  - [call](./console.html#call)
+  - [callByCNS](./console.html#callbycns)
+
+包含多个参数时，各参数使用空格分开。
+**注意:不同参数之间使用空格分离，复杂参数内部不要出现空格，否则会被控制台分割，当做不同参数处理**
+
+另外对于一些复杂特殊的参数，有一些特殊的规则:
+
+- 二进制类型: `bytes`、`bytes1`、...、`bytes32`
+  
+  控制台的输入都会当做文本处理，无法直接接收二进制数据，可以将二进制数据转换为`hex`字符串，或者`Base64`格式，格式如下:
+  - `hex://xxxxxxxxxxxxxxxxx`
+  - `base64://xxxxxxxxxxxxxxxxx`
+
+- 数组类型:
+  
+  数组按照`[元素1,元素2,...,元素N]`的格式，`[]`作为数组标记，中间的元素使用逗号分割
+  
+  **注意:数组整体作为一个参数，不要在中间包含空格**
+
+  例如:
+  - `int256[]`: [1,2,3,4]
+  - `string[3]`: ["a","b","c"]
+
+- 结构体`struct`类型:
+  
+  结构体类型参数支持两种格式:
+  - 数组方式
+  
+  依次将结构体每个成员的值组成一个数组，例如:
+
+  ```shell
+  struct Person {
+      string name;
+      string address;
+      int age;
+  }
+  ```
+
+  假如Person对象: `{name: "XiaoWang", address: "ShenZhen", age: 18}`，控制台输入`Person`对象格式: `["XiaoWang","ShenZhen",18]`
+
+  - 键值对字符串
+  构造结构体对应的键值对`JSON`字符串, 同样以上面的`Person`对象为例，按照`JSON`方式输入:`{"name":"XiaoWang","address":"ShenZhen","age":111}`
+
+- 复杂数据类型
+  
+  更复杂的数据类型由普通类型嵌套生成，同样遵循之前的规则，按照对应的规则对参数进行嵌套即可
